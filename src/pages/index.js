@@ -1,115 +1,227 @@
+import React, { useState, useRef, useEffect, useContext } from "react";
 import Image from "next/image";
 import localFont from "next/font/local";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+import Hero from "@/components/user/Hero";
+import Header from "@/components/user/Header";
+import Footer from "@/components/user/Footer";
+import Services from "@/components/user/Services";
+import Banner from "@/components/user/Banner";
+import Collections from "@/components/user/Collections";
+import NewItems from "@/components/user/NewItems";
+import { FaWhatsapp } from "react-icons/fa";
+import Man from "@/components/user/specials/Man";
+import Woman from "@/components/user/specials/Woman";
+import BestSellers from "@/components/user/BestSellers";
+import First from "@/assets/eau-perfume.png";
+import Second from "@/assets/beau-perfume.png";
+import Third from "@/assets/bottle-parfum.png";
+import Fourth from "@/assets/blue-orange.png";
+import Firsts from "@/assets/Firsts.png";
+import Seconds from "@/assets/Seconds.png";
+import Thirds from "@/assets/Thirds.png";
+import Fourths from "@/assets/Fouths.png";
+import Swal from "sweetalert2";
+import Loader from "@/components/user/Loader";
+import { Alert } from "@mui/material";
 
 export default function Home() {
-  return (
-    <div
-      className={`${geistSans.variable} ${geistMono.variable} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/pages/index.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [cart, setCart] = useState([]);
+  const [openCart, setOpenCart] = useState(false);
+  const cartMenuRef = useRef(null);
+  const cartButtonRef = useRef(null);
+  const [wishlist, setWishlist] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [notification, setNotification] = useState({ message: "", type: "" });
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+  // Faire Appel l'API pour obtenir la liste des produits
+  useEffect(() => {
+    fetch("http://localhost:3000/api/products")
+      .then((response) => response.json())
+      .then((data) => {
+        setProducts(data.product);
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
+      });
+  });
+
+  const handleOpenCart = () => {
+    setOpenCart(!openCart);
+  };
+
+  const handleClickOutside = (event) => {
+    if (
+      cartMenuRef.current &&
+      !cartMenuRef.current.contains(event.target) &&
+      !cartButtonRef.current.contains(event.target)
+    ) {
+      setOpenCart(false); // Ferme le menu si on clique en dehors
+    }
+  };
+
+  // Charger le panier depuis localStorage au démarrage
+  useEffect(() => {
+    const storedCart = localStorage.getItem("cart");
+    if (storedCart) {
+      setCart(JSON.parse(storedCart));
+    }
+  }, []);
+
+  // Sauvegarder le panier dans localStorage chaque fois qu'il change
+  useEffect(() => {
+    if (cart.length > 0) {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+  }, [cart]);
+
+  const addToCart = (product) => {
+    const existingProductIndex = cart.findIndex(
+      (item) => item.id === product.id
+    );
+
+    if (existingProductIndex !== -1) {
+      const updatedCart = [...cart];
+      const currentQuantity = updatedCart[existingProductIndex].quantity;
+
+      // Vérifier si la quantité actuelle est inférieure à la quantité en stock
+      if (currentQuantity < product.stock) {
+        updatedCart[existingProductIndex].quantity += 1;
+        setCart(updatedCart);
+      }
+    } else {
+      // Ajouter un produit avec une quantité de 1
+      setCart([...cart, { ...product, quantity: 1 }]);
+
+      // Nouveau produit ajouté, afficher la notification
+      setNotification({ message: "Produit ajouté au panier", type: "success" });
+
+      // Mettre à jour le localStorage
+      localStorage.setItem(
+        "cart",
+        JSON.stringify([...cart, { ...product, quantity: 1 }])
+      );
+    }
+  };
+
+  const increaseQuantity = (productId) => {
+    const updatedCart = cart.map((item) =>
+      item.id === productId ? { ...item, quantity: item.quantity + 1 } : item
+    );
+    setCart(updatedCart);
+  };
+
+  const decreaseQuantity = (productId) => {
+    const updatedCart = cart.map((item) =>
+      item.id === productId && item.quantity > 1
+        ? { ...item, quantity: item.quantity - 1 }
+        : item
+    );
+    setCart(updatedCart.filter((item) => item.quantity > 0));
+  };
+
+  const removeFromCart = (productId) => {
+    const updatedCart = cart.filter((item) => item.id !== productId);
+    setCart(updatedCart);
+    // Mettre à jour le localStorage après suppression
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+  };
+
+  const clearCart = () => {
+    setCart([]); // Vider le panier
+    localStorage.removeItem("cart"); // Supprimer le panier du localStorage
+  };
+
+  // Charger la Whistle
+  useEffect(() => {
+    const storedWishlist = localStorage.getItem("wishlist");
+    if (storedWishlist) {
+      setWishlist(JSON.parse(storedWishlist));
+    }
+  }, []);
+
+  // Ajouter à la liste des envies
+  const addToWishlist = (product) => {
+    const storedWishlist = [...wishlist];
+
+    if (!storedWishlist.find((item) => item.id === product.id)) {
+      const updatedWishlist = [...storedWishlist, product];
+      setWishlist(updatedWishlist);
+      localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+      Swal.fire({
+        icon: "success",
+        title: "Ajouté à la liste des envies",
+        text: `${product.name} a été ajouté avec succès !`,
+      });
+    } else {
+      Swal.fire({
+        icon: "info",
+        title: "Déjà dans la liste des envies",
+        text: `${product.name} est déjà dans votre liste.`,
+      });
+    }
+  };
+
+  // Vérifier si un produit est dans la wishlist
+  const isInWishlist = (productId) => {
+    return wishlist.some((item) => item.id === productId);
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  };
+
+  // Fonction pour calculer la somme totale du panier
+  const totalPrice = cart.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+
+  return (
+    <>
+      {/* Composants fixes */}
+      <Banner />
+      <Header
+        openCart={openCart}
+        handleOpenCart={handleOpenCart}
+        cartButtonRef={cartButtonRef}
+        cartMenuRef={cartMenuRef}
+        handleClickOutside={handleClickOutside}
+        cart={cart}
+        addToCart={addToCart}
+        increaseQuantity={increaseQuantity}
+        decreaseQuantity={decreaseQuantity}
+        removeFromCart={removeFromCart}
+        totalPrice={totalPrice}
+        clearCart={clearCart}
+      />
+
+      {/* Sections principales */}
+      <main>
+        <Hero />
+        <Services />
+        <Collections />
+
+        {/* Sections de produits */}
+        <NewItems
+          addToCart={addToCart}
+          cart={cart}
+          addToWishlist={addToWishlist}
+          isInWishlist={isInWishlist}
+          wishlist={wishlist}
+        />
+        <Man products={products} addToCart={addToCart} />
+        <Woman addToCart={addToCart} />
+        <BestSellers addToCart={addToCart} cart={cart} />
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      <Footer />
+
+      {/* Bouton WhatsApp */}
+      <div className="fixed bottom-2 right-2 z-10">
+        <button
+          onClick={() => window.open("https://wa.me/221781016171")}
+          type="button"
+          className="text-white bg-green-500 p-2 rounded-lg"
         >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          <FaWhatsapp className="w-10 h-10" />
+        </button>
+      </div>
+    </>
   );
 }

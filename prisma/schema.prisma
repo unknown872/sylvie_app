@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Collection {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  products  Product[]
+}
+
+model Product {
+    id            Int      @id @default(autoincrement())
+    name          String
+    image         String
+    description   String   
+    price         Int   
+    category      String @default("homme") 
+    brand         String   
+    stock         Int     
+    initialStock  Int @default(0)
+    volume        Int    
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+    collection    Collection @relation(fields: [collectionId], references: [id])
+    collectionId  Int
+    other_image   String?   
+}
+
+model Order {
+  id             Int       @id @default(autoincrement())
+  firstName      String
+  lastName       String
+  city           String
+  address        String
+  phone          String
+  email          String
+  notes          String?
+  deliveryQuartier String
+  deliveryPrice  Int
+  totalPrice     Int
+  statut         String    @default("En attente") 
+  products       ProductOnOrder[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  shippedAt        DateTime? // Expédiée
+  deliveredAt      DateTime? // Livrée
+  cancelledAt      DateTime? // Annulée
+}
+
+model ProductOnOrder {
+  id          Int     @id @default(autoincrement())
+  orderId     Int
+  productId   Int
+  name        String
+  price       Int
+  quantity    Int
+  image       String
+  other_image String
+  order       Order   @relation(fields: [orderId], references: [id])
+}
+
+model Admin{
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
