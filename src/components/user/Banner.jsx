@@ -8,7 +8,7 @@ import { FaPhoneAlt } from "react-icons/fa";
 export default function Banner() {
     return (
         <div className='hidden lg:flex justify-between bg-black px-6 py-4'>
-            <div className='flex text-sm font-poppins text-white space-x-2'>
+            <div className='flex text-sm font-poppins text-white space-x-2 text-white'>
                 <FaLocationDot className='w-4 h-4' />
                 <p className='font-semibold'>Médina 31x2 bis</p>
             </div>
