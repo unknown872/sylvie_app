@@ -30,6 +30,10 @@ export default async function handler(req, res) {
                 include: { collection: true },
             });
 
+            if (products.length === 0) {
+                return res.status(404).json({ error: "Aucun produit trouvé." });
+            }
+
             const totalProducts = await prisma.product.count({ where });
 
             res.status(200).json({

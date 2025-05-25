@@ -68,7 +68,7 @@ model ProductOnOrder {
   price       Int
   quantity    Int
   image       String
-  other_image String
+  other_image String?
   order       Order   @relation(fields: [orderId], references: [id])
 }
 

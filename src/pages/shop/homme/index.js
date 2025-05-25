@@ -12,6 +12,7 @@ import { BsCheckCircle, BsExclamationCircle } from "react-icons/bs";
 import { IoIosClose } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 import { set } from "react-hook-form";
+import Skeleton from "@/components/user/loaders/Skeleton";
 
 function index() {
   const [cart, setCart] = useState([]);
@@ -60,7 +61,9 @@ function index() {
     } else {
       const normalizedKeyword = normalizeText(keyword);
       // Recherche dans l'API avec le mot-clé
-      const response = await fetch(`/api/products?search=${normalizedKeyword}&category=homme`);
+      const response = await fetch(
+        `/api/products?search=${normalizedKeyword}&category=homme`
+      );
       const data = await response.json();
       setProducts(data.products);
     }
@@ -253,7 +256,7 @@ function index() {
     const now = new Date();
     const created = new Date(createdAt);
     const diffInDays = (now - created) / (1000 * 60 * 60 * 24); // ms to days
-    return diffInDays <= 5;
+    return diffInDays <= 30; // Considérer comme nouveau si créé dans les 30 derniers jours
   };
 
   return (
@@ -389,119 +392,125 @@ function index() {
                 </div>
               </div>
             </div>
-            {/* Liste des produits */}
-            {products.length === 0 && (
-              <div className="flex justify-center items-center h-96">
-                <h1 className="text-xl font-poppins">Aucun produit trouvé</h1>
-              </div>
-            )}
             <div className="py-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-x-4 gap-y-8 px-4">
-              {products.map((product) => {
-                return (
-                  <div
-                    key={product.id}
-                    className="md:mx-2 bg-bgColor rounded shadow-lg relative hover:shadow-xl transition duration-200 group"
-                  >
-                    <div className="flex flex-col justify-center items-center">
-                      <div
-                        className="relative w-full h-80 cursor-pointer"
-                        onClick={() => {
-                          router.push({
-                            pathname: `/product/${product.id}`,
-                          });
-                        }}
-                      >
-                        <Image
-                          src={product.image}
-                          alt="product"
-                          layout="fill"
-                          className="transition-opacity object-cover duration-500 ease-in-out group-hover:opacity-0"
-                        />
-                        <Image
-                          src={product?.other_image || product?.image}
-                          alt="product-hover"
-                          layout="fill"
-                          className="absolute inset-0 object-cover transition-opacity duration-500 ease-in-out opacity-0 group-hover:opacity-100"
-                        />
-                      </div>
-                      {/* Badge de nouveauté */}
-                      {isNewProduct(product.createdAt) && (
-                        <div className="bg-news text-white rounded absolute top-0 left-0 font-poppins text-sm px-1 md:px-4">
-                          Nouveauté
+              {isLoading ? (
+                <div className="col-span-4">
+                  <Skeleton />
+                </div>
+              ) : products.length === 0 ? (
+                <div className="col-span-4">
+                  <p className="text-center text-gray-500">
+                    Aucun produit disponible
+                  </p>
+                </div>
+              ) : (
+                products.map((product) => {
+                  return (
+                    <div
+                      key={product.id}
+                      className="md:mx-2 bg-bgColor rounded shadow-lg relative hover:shadow-xl transition duration-200 group"
+                    >
+                      <div className="flex flex-col justify-center items-center">
+                        <div
+                          className="relative w-full h-80 cursor-pointer"
+                          onClick={() => {
+                            router.push({
+                              pathname: `/product/${product.id}`,
+                            });
+                          }}
+                        >
+                          <Image
+                            src={product.image}
+                            alt="product"
+                            layout="fill"
+                            className="transition-opacity object-cover duration-500 ease-in-out group-hover:opacity-0"
+                          />
+                          <Image
+                            src={product?.other_image || product?.image}
+                            alt="product-hover"
+                            layout="fill"
+                            className="absolute inset-0 object-cover transition-opacity duration-500 ease-in-out opacity-0 group-hover:opacity-100"
+                          />
                         </div>
-                      )}
-                      <div className="absolute top-1 right-1 md:hidden">
-                        <span className="bg-slate-300 text-white rounded-full font-poppins text-sm p-1">
-                          {product?.volume} ML
-                        </span>
-                      </div>
-                      <div className="flex flex-col py-2 bg-white w-full">
-                        <button
-                          onClick={() => addToCart(product)}
-                          disabled={product.stock < 1}
-                          className={`hidden md:flex justify-center items-center space-x-1 absolute bottom-16 left-1/2 transform -translate-x-1/2 translate-y-full group-hover:translate-y-0 w-full px-4 py-2 bg-black text-white opacity-0 group-hover:opacity-100 transition duration-500 ease-out ${
-                            product.stock < 1
-                              ? "bg-gray-400 cursor-not-allowed"
-                              : "hover:bg-amber-400"
-                          }`}
-                        >
-                          {product.stock < 1 ? (
-                            <span>Rupture de Stock</span>
-                          ) : (
-                            <div className="hidden md:flex space-x-1 items-center">
-                              <LiaShoppingBagSolid />
-                              <span>Ajouter au panier</span>
-                            </div>
-                          )}
-                        </button>
-                        {/* Bouton d'ajout au panier pour mobile */}
-                        <button
-                          onClick={() => addToCart(product)}
-                          disabled={product.stock < 1}
-                          className={`md:hidden flex justify-center items-center space-x-1 absolute bottom-16 w-full px-4 py-2 bg-black text-white ${
-                            product.stock < 1
-                              ? "bg-gray-400 cursor-not-allowed"
-                              : "hover:bg-amber-400"
-                          }`}
-                        >
-                          {product.stock < 1 ? (
-                            <span>Rupture de Stock</span>
-                          ) : (
-                            <div className="flex space-x-1 items-center">
-                              <LiaShoppingBagSolid />
-                              <span>Ajouter au panier</span>
-                            </div>
-                          )}
-                        </button>
-                        <p className="text-gray-700 font-thin text-center mb-2">
-                          {product?.volume} ML
-                        </p>
-                        <div className="pl-4 h-full">
-                          <h3
-                            className="font-poppins text-sm text-gray-600 cursor-pointer hover:text-amber-400"
-                            onClick={() => {
-                              router.push(`/product/${product.id}`);
-                            }}
+                        {/* Badge de nouveauté */}
+                        {isNewProduct(product.createdAt) && (
+                          <div className="bg-news text-white rounded absolute top-0 left-0 font-poppins text-sm px-1 md:px-4">
+                            Nouveauté
+                          </div>
+                        )}
+                        <div className="absolute top-1 right-1 md:hidden">
+                          <span className="bg-slate-300 text-white rounded-full font-poppins text-sm p-1">
+                            {product?.volume} ML
+                          </span>
+                        </div>
+                        <div className="flex flex-col py-2 bg-white w-full">
+                          <button
+                            onClick={() => addToCart(product)}
+                            disabled={product.stock < 1}
+                            className={`hidden md:flex justify-center items-center space-x-1 absolute bottom-16 left-1/2 transform -translate-x-1/2 translate-y-full group-hover:translate-y-0 w-full px-4 py-2 bg-black text-white opacity-0 group-hover:opacity-100 transition duration-500 ease-out ${
+                              product.stock < 1
+                                ? "bg-gray-400 cursor-not-allowed"
+                                : "hover:bg-amber-400"
+                            }`}
                           >
-                            {screenWidth < 768 &&
-                              `${product.name.slice(0, 19)}...`}
-                            {screenWidth > 768 &&
-                              `${product.name.slice(0, 30)}...`}
-                          </h3>
-                          <p className="text-gray-900 text-lg font-semibold font-poppins">
-                            {new Intl.NumberFormat("fr-FR", {
-                              maximumFractionDigits: 0,
-                              minimumFractionDigits: 0,
-                              style: "currency",
-                              currency: "CFA",
-                            }).format(product.price)}
+                            {product.stock < 1 ? (
+                              <span>Rupture de Stock</span>
+                            ) : (
+                              <div className="hidden md:flex space-x-1 items-center">
+                                <LiaShoppingBagSolid />
+                                <span>Ajouter au panier</span>
+                              </div>
+                            )}
+                          </button>
+                          {/* Bouton d'ajout au panier pour mobile */}
+                          <button
+                            onClick={() => addToCart(product)}
+                            disabled={product.stock < 1}
+                            className={`md:hidden flex justify-center items-center space-x-1 absolute bottom-16 w-full px-4 py-2 bg-black text-white ${
+                              product.stock < 1
+                                ? "bg-gray-400 cursor-not-allowed"
+                                : "hover:bg-amber-400"
+                            }`}
+                          >
+                            {product.stock < 1 ? (
+                              <span>Rupture de Stock</span>
+                            ) : (
+                              <div className="flex space-x-1 items-center">
+                                <LiaShoppingBagSolid />
+                                <span>Ajouter au panier</span>
+                              </div>
+                            )}
+                          </button>
+                          <p className="text-gray-700 font-thin text-center mb-2">
+                            {product?.volume} ML
                           </p>
+                          <div className="pl-4 h-full">
+                            <h3
+                              className="font-poppins text-sm text-gray-600 cursor-pointer hover:text-amber-400"
+                              onClick={() => {
+                                router.push(`/product/${product.id}`);
+                              }}
+                            >
+                              {screenWidth < 768 &&
+                                `${product.name.slice(0, 19)}...`}
+                              {screenWidth > 768 &&
+                                `${product.name.slice(0, 30)}...`}
+                            </h3>
+                            <p className="text-gray-900 text-lg font-semibold font-poppins">
+                              {new Intl.NumberFormat("fr-FR", {
+                                maximumFractionDigits: 0,
+                                minimumFractionDigits: 0,
+                                style: "currency",
+                                currency: "CFA",
+                              }).format(product.price)}
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })
+              )}
             </div>
           </div>
         </motion.div>

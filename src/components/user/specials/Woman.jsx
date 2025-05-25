@@ -1,10 +1,52 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Video from 'next-video';
 import Tom from '@/videos/Tom.mp4';
 import { FaArrowRight } from 'react-icons/fa';
 
 
 export default function Woman() {
+    const [showSkeleton, setShowSkeleton] = useState(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowSkeleton(false);
+        }, 5000); // 5 secondes pour bien voir
+
+        return () => clearTimeout(timer);
+    }, []);
+
+    // Skeleton intégré directement
+    if (showSkeleton) {
+        return (
+            <section className="relative h-[500px] flex flex-col items-center justify-center text-center text-white">
+                {/* Skeleton pour la vidéo de fond */}
+                <div className="absolute inset-0 overflow-hidden bg-gradient-to-br from-gray-300 to-gray-400">
+                    {/* Icône play au centre pour indiquer une vidéo */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-16 h-16 bg-gray-500/50 rounded-full flex items-center justify-center">
+                            <div className="w-0 h-0 border-l-[12px] border-l-white border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent ml-1"></div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Skeleton pour le contenu texte */}
+                <div className="relative z-10 space-y-3 flex flex-col justify-center items-center">
+                    {/* Skeleton pour le titre principal */}
+                    <div className="h-8 w-80 bg-white/40 rounded-md animate-pulse"></div>
+
+                    {/* Skeleton pour le sous-titre */}
+                    <div className="h-6 w-32 bg-white/40 rounded-md animate-pulse"></div>
+
+                    {/* Skeleton pour le bouton */}
+                    <div className="border border-white/60 px-2 py-1 flex space-x-1 bg-white/20 rounded animate-pulse">
+                        <div className="h-4 w-20 bg-white/40 rounded"></div>
+                        <div className="h-4 w-4 bg-white/40 rounded"></div>
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
     return (
         <section className="relative h-[500px] flex flex-col items-center justify-center text-center text-white">
             <div className="absolute inset-0 overflow-hidden">

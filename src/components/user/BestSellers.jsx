@@ -125,136 +125,136 @@ export default function BestSellers({ addToCart, cart }) {
                     </div>
                 </div>
             )}
-            {products.length > 0 && (
-                <div>
-
-                    <div className='flex justify-center items-center font-poppins text-2xl md:text-3xl mb-10'>
-                        <h2>NOS MEILLEURES VENTES</h2>
-                    </div>
-                    {isLoading ? (
-                        <Skeleton />
-                    ) : (
-                        <Carousel
-                            responsive={responsive}
-                            autoPlay={true}
-                            swipeable={true}
-                            draggable={true}
-                            showDots={true}
-                            infinite={true}
-                            partialVisible={false}
-                            dotListClass="custom-dot-list-style"
-                            className="z-0"
+            <div className='flex justify-center items-center font-poppins text-2xl md:text-3xl mb-10'>
+                <h2>NOS MEILLEURES VENTES</h2>
+            </div>
+            {isLoading ? (
+                <Skeleton />
+            ) : (
+                <Carousel
+                    responsive={responsive}
+                    autoPlay={true}
+                    swipeable={true}
+                    draggable={true}
+                    showDots={true}
+                    infinite={true}
+                    partialVisible={false}
+                    dotListClass="custom-dot-list-style"
+                    className="z-0"
+                >
+                    {products.map((product) => (
+                        <div
+                            key={product.id}
+                            className="mx-2 bg-bgColor rounded shadow-lg relative hover:shadow-xl transition duration-200 group"
                         >
-                            {products.map((product) => (
+                            <div className="flex flex-col justify-center items-center">
                                 <div
-                                    key={product.id}
-                                    className="mx-2 bg-bgColor rounded shadow-lg relative hover:shadow-xl transition duration-200 group"
+                                    className="relative w-full h-80 cursor-pointer"
+                                    onClick={() => {
+                                        router.push({
+                                            pathname: `/product/${product.id}`,
+                                        });
+                                    }}
                                 >
-                                    <div className="flex flex-col justify-center items-center">
-                                        <div
-                                            className="relative w-full h-80 cursor-pointer"
+                                    <Image
+                                        src={product.image}
+                                        alt="product"
+                                        layout="fill"
+                                        className="transition-opacity object-cover duration-500 ease-in-out group-hover:opacity-0"
+                                    />
+                                    <Image
+                                        src={product.other_image || product.image}
+                                        alt="product-hover"
+                                        layout="fill"
+                                        className="absolute inset-0 object-cover transition-opacity duration-500 ease-in-out opacity-0 group-hover:opacity-100"
+                                    />
+                                </div>
+                                {/* Badge de nouveauté */}
+                                {isNewProduct(product.createdAt) && (
+                                    <div className="bg-news text-white rounded absolute top-0 left-0 font-poppins text-sm px-1 md:px-4">
+                                        Nouveauté
+                                    </div>
+                                )}
+                                <div className="absolute top-1 right-1 md:hidden">
+                                    <span className="bg-slate-300 text-white rounded-full font-poppins text-sm p-1">
+                                        {product?.volume} ML
+                                    </span>
+                                </div>
+                                <div className="flex flex-col py-2 bg-white w-full">
+                                    <button
+                                        onClick={() => handleAddToCart(product)}
+                                        disabled={product.stock < 1}
+                                        className={`hidden md:flex justify-center items-center space-x-1 absolute bottom-16 left-1/2 transform -translate-x-1/2 translate-y-full group-hover:translate-y-0 w-full px-4 py-2 bg-black text-white opacity-0 group-hover:opacity-100 transition duration-500 ease-out ${product.stock < 1
+                                            ? "bg-gray-400 cursor-not-allowed"
+                                            : "hover:bg-amber-400"
+                                            }`}
+                                    >
+                                        {product.stock < 1 ? (
+                                            <span>Rupture de Stock</span>
+                                        ) : (
+                                            <div className="hidden md:flex space-x-1 items-center">
+                                                <LiaShoppingBagSolid />
+                                                <span>Ajouter au panier</span>
+                                            </div>
+                                        )}
+                                    </button>
+                                    {/* Bouton d'ajout au panier pour mobile */}
+                                    <button
+                                        onClick={() => handleAddToCart(product)}
+                                        disabled={product.stock < 1}
+                                        className={`md:hidden flex justify-center items-center space-x-1 absolute bottom-16 w-full px-4 py-2 bg-black text-white ${product.stock < 1
+                                            ? "bg-gray-400 cursor-not-allowed"
+                                            : "hover:bg-amber-400"
+                                            }`}
+                                    >
+                                        {product.stock < 1 ? (
+                                            <span>Rupture de Stock</span>
+                                        ) : (
+                                            <div className="flex space-x-1 items-center">
+                                                <LiaShoppingBagSolid />
+                                                <span>Ajouter au panier</span>
+                                            </div>
+                                        )}
+                                    </button>
+                                    <p className="text-gray-700 font-thin text-center mb-2">{product?.volume}{" "}ML</p>
+                                    <div className="pl-4 h-full">
+                                        <h3
+                                            className="font-poppins text-sm text-gray-600 cursor-pointer hover:text-amber-400"
                                             onClick={() => {
                                                 router.push({
                                                     pathname: `/product/${product.id}`,
                                                 });
                                             }}
                                         >
-                                            <Image
-                                                src={product.image}
-                                                alt="product"
-                                                layout="fill"
-                                                className="transition-opacity object-cover duration-500 ease-in-out group-hover:opacity-0"
-                                            />
-                                            <Image
-                                                src={product.other_image || product.image}
-                                                alt="product-hover"
-                                                layout="fill"
-                                                className="absolute inset-0 object-cover transition-opacity duration-500 ease-in-out opacity-0 group-hover:opacity-100"
-                                            />
-                                        </div>
-                                        {/* Badge de nouveauté */}
-                                        {isNewProduct(product.createdAt) && (
-                                            <div className="bg-news text-white rounded absolute top-0 left-0 font-poppins text-sm px-1 md:px-4">
-                                                Nouveauté
-                                            </div>
-                                        )}
-                                        <div className="absolute top-1 right-1 md:hidden">
-                                            <span className="bg-slate-300 text-white rounded-full font-poppins text-sm p-1">
-                                                {product?.volume} ML
-                                            </span>
-                                        </div>
-                                        <div className="flex flex-col py-2 bg-white w-full">
-                                            <button
-                                                onClick={() => handleAddToCart(product)}
-                                                disabled={product.stock < 1}
-                                                className={`hidden md:flex justify-center items-center space-x-1 absolute bottom-16 left-1/2 transform -translate-x-1/2 translate-y-full group-hover:translate-y-0 w-full px-4 py-2 bg-black text-white opacity-0 group-hover:opacity-100 transition duration-500 ease-out ${product.stock < 1
-                                                    ? "bg-gray-400 cursor-not-allowed"
-                                                    : "hover:bg-amber-400"
-                                                    }`}
-                                            >
-                                                {product.stock < 1 ? (
-                                                    <span>Rupture de Stock</span>
-                                                ) : (
-                                                    <div className="hidden md:flex space-x-1 items-center">
-                                                        <LiaShoppingBagSolid />
-                                                        <span>Ajouter au panier</span>
-                                                    </div>
-                                                )}
-                                            </button>
-                                            {/* Bouton d'ajout au panier pour mobile */}
-                                            <button
-                                                onClick={() => handleAddToCart(product)}
-                                                disabled={product.stock < 1}
-                                                className={`md:hidden flex justify-center items-center space-x-1 absolute bottom-16 w-full px-4 py-2 bg-black text-white ${product.stock < 1
-                                                    ? "bg-gray-400 cursor-not-allowed"
-                                                    : "hover:bg-amber-400"
-                                                    }`}
-                                            >
-                                                {product.stock < 1 ? (
-                                                    <span>Rupture de Stock</span>
-                                                ) : (
-                                                    <div className="flex space-x-1 items-center">
-                                                        <LiaShoppingBagSolid />
-                                                        <span>Ajouter au panier</span>
-                                                    </div>
-                                                )}
-                                            </button>
-                                            <p className="text-gray-700 font-thin text-center mb-2">{product?.volume}{" "}ML</p>
-                                            <div className="pl-4 h-full">
-                                                <h3
-                                                    className="font-poppins text-sm text-gray-600 cursor-pointer hover:text-amber-400"
-                                                    onClick={() => {
-                                                        router.push({
-                                                            pathname: `/product/${product.id}`,
-                                                        });
-                                                    }}
-                                                >
-                                                    {screenWidth < 768 &&
-                                                        `${product.name.slice(0, 19)}...`}
-                                                    {screenWidth > 768 &&
-                                                        `${product.name.slice(0, 30)}...`}
-                                                </h3>
-                                                <p className="text-gray-900 text-lg font-semibold font-poppins">
-                                                    {new Intl.NumberFormat("fr-FR", {
-                                                        maximumFractionDigits: 0,
-                                                        minimumFractionDigits: 0,
-                                                        style: "currency",
-                                                        currency: "CFA",
-                                                    }).format(product.price)}
-                                                </p>
-                                            </div>
-                                        </div>
+                                            {screenWidth < 768 &&
+                                                `${product.name.slice(0, 19)}...`}
+                                            {screenWidth > 768 &&
+                                                `${product.name.slice(0, 30)}...`}
+                                        </h3>
+                                        <p className="text-gray-900 text-lg font-semibold font-poppins">
+                                            {new Intl.NumberFormat("fr-FR", {
+                                                maximumFractionDigits: 0,
+                                                minimumFractionDigits: 0,
+                                                style: "currency",
+                                                currency: "CFA",
+                                            }).format(product.price)}
+                                        </p>
                                     </div>
                                 </div>
-                            ))}
-                        </Carousel>
-                    )}
-                    <div className='flex mt-6 py-6 items-center justify-center'>
-                        <button className='bg-black flex items-center space-x-2 hover:bg-amber-400 text-white font-poppins py-2 px-6'>
-                            <span>DÉCOUVRIR</span>
-                            <FaArrowRight />
-                        </button>
-                    </div>
+                            </div>
+                        </div>
+                    ))}
+                </Carousel>
+            )}
+            {products.length > 0 && !isLoading && (
+                <div className="flex mt-6 py-6 items-center justify-center">
+                    <button
+                        onClick={() => router.push('/shop')}
+                        className="bg-black flex items-center space-x-2 hover:bg-amber-400 text-white font-poppins py-2 px-6"
+                    >
+                        <span>DÉCOUVRIR</span>
+                        <FaArrowRight />
+                    </button>
                 </div>
             )}
         </div>

@@ -29,6 +29,7 @@ export default function Header({ products, addToCart, totalPrice, clearCart, rem
     const router = useRouter();
     const [isMobile, setIsMobile] = useState(false);
     const [collectionMenuOpen, setCollectionMenuOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const collectionRef = useRef(null);
     const shopRef = useRef(null);
@@ -90,12 +91,15 @@ export default function Header({ products, addToCart, totalPrice, clearCart, rem
     // Faire appel a l'API pour obtenir la liste des collections
     const getCollections = async () => {
         try {
+            setIsLoading(true)
             const response = await fetch("/api/collections");
             const data = await response.json();
             setCollections(data.collections);
             return data;
         } catch (error) {
             console.error(error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -241,7 +245,7 @@ export default function Header({ products, addToCart, totalPrice, clearCart, rem
                             damping: 30,
                             mass: 1,
                         }}
-                        
+
                         className="fixed top-0 left-0 w-72 h-full bg-gradient-to-b from-white to-gray-50 shadow-xl z-50 border-r border-gray-100"
                     >
                         <div className="py-8 px-6">
@@ -318,16 +322,35 @@ export default function Header({ products, addToCart, totalPrice, clearCart, rem
                                                 className="ml-10 mt-1"
                                             >
                                                 <ul className="border-l border-gray-200 pl-3 py-2 space-y-3">
-                                                    {collections.map((collection) => (
-                                                        <li key={collection.name} className="transition-all">
-                                                            <Link href={`/shop/${collection.name}`} passHref>
-                                                                <span className={`text-sm text-gray-600 hover:text-gray-900 hover:font-medium block py-1 transition-all duration-200 ${isActive(`/shop/${collection.name}`) ? "text-gray-900 font-medium" : ""}`}>
-                                                                    {collection.name}
-                                                                </span>
-                                                            </Link>
+                                                    {isLoading ? (
+                                                        // Affiche des skeletons pendant le chargement
+                                                        Array.from({ length: 4 }).map((_, index) => (
+                                                            <li key={index}>
+                                                                <div className="text-sm text-gray-300 bg-gray-200 rounded w-32 h-4 block py-1 animate-pulse" />
+                                                            </li>
+                                                        ))
+                                                    ) : collections && collections.length > 0 ? (
+                                                        // Affiche les collections si elles existent
+                                                        collections.map((collection) => (
+                                                            <li key={collection.name} className="transition-all">
+                                                                <Link href={`/shop/${collection.name}`} passHref>
+                                                                    <a
+                                                                        className={`text-sm text-gray-600 hover:text-gray-900 hover:font-medium block py-1 transition-all duration-200 ${isActive(`/shop/${collection.name}`) ? "text-gray-900 font-medium" : ""
+                                                                            }`}
+                                                                    >
+                                                                        {collection.name}
+                                                                    </a>
+                                                                </Link>
+                                                            </li>
+                                                        ))
+                                                    ) : (
+                                                        // Affiche un message s'il n'y a pas de données
+                                                        <li>
+                                                            <span className="text-sm text-gray-400 italic">Aucune collection disponible</span>
                                                         </li>
-                                                    ))}
+                                                    )}
                                                 </ul>
+
                                             </motion.div>
                                         )}
                                     </li>
