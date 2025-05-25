@@ -40,7 +40,7 @@ function index() {
   useEffect(() => {
     const fetchProducts = async () => {
       const response = await fetch(
-        `/api/products?search=${searchQuery}&category=homme`
+        `/api/products?search=${searchQuery}&category=femme`
       );
       const data = await response.json();
       setProducts(data.products);
@@ -55,14 +55,14 @@ function index() {
   const searchProduct = async (keyword) => {
     if (!keyword) {
       // Si le mot-clé est vide, on remet tous les produits
-      const response = await fetch(`/api/products?category=homme`);
+      const response = await fetch(`/api/products?category=femme`);
       const data = await response.json();
       setProducts(data.products);
     } else {
       const normalizedKeyword = normalizeText(keyword);
       // Recherche dans l'API avec le mot-clé
       const response = await fetch(
-        `/api/products?search=${normalizedKeyword}&category=homme`
+        `/api/products?search=${normalizedKeyword}&category=femme`
       );
       const data = await response.json();
       setProducts(data.products);
@@ -338,7 +338,7 @@ function index() {
             />
             <div className="absolute text-white text-center">
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-poppins">
-                Parfum pour Homme
+                Parfum pour Femme
               </h2>
               <p className="text-sm md:text-base">
                 Une sensation de merveille olfactive
