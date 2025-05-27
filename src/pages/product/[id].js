@@ -14,7 +14,7 @@ import { Alert } from "@mui/material";
 import Footer from "@/components/user/Footer";
 import { TbArrowBack } from "react-icons/tb";
 import { LiaShoppingBagSolid } from "react-icons/lia";
-import Loader from "@/components/user/Loaders/Loader";
+import Loader from "@/components/user/loaders/Loader";
 import {
   Table,
   TableBody,
