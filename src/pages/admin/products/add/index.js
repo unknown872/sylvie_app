@@ -10,6 +10,7 @@ import { IoArrowBackCircleOutline } from "react-icons/io5";
 import Link from "next/link";
 import Image from "next/image";
 import { MdKeyboardArrowRight } from "react-icons/md";
+import Loader from "@/components/user/loaders/Loader";
 
 function index() {
   const [name, setName] = useState("");
@@ -26,6 +27,7 @@ function index() {
   const [collectionId, setCollectionId] = useState("");
   const [collections, setCollections] = useState([]);
   const [imageName, setImageName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -49,7 +51,15 @@ function index() {
       return;
     }
 
-    if (!name || !description || !price || !brand || !stock || !volume || !category ) {
+    if (
+      !name ||
+      !description ||
+      !price ||
+      !brand ||
+      !stock ||
+      !volume ||
+      !category
+    ) {
       setNotification({
         message: "Tous les champs doivent être remplis.",
         type: "error",
@@ -74,6 +84,7 @@ function index() {
     }
 
     try {
+      setIsLoading(true);
       const response = await fetch("/api/products/create", {
         method: "POST",
         body: formData,
@@ -114,19 +125,35 @@ function index() {
         type: "error",
       });
     } finally {
+      setIsLoading(false);
       setIsSubmitting(false);
     }
   };
 
   useEffect(() => {
     async function fetchCollections() {
-      const response = await fetch("/api/collections");
-      const data = await response.json();
-      setCollections(data.collections);
+      try {
+        setIsLoading(true);
+        const response = await fetch("/api/collections");
+        const data = await response.json();
+        setCollections(data.collections);
+      } catch (error) {
+        console.error("Error fetching collections:", error);
+      } finally {
+        setIsLoading(false);
+      }
     }
 
     fetchCollections();
   }, []);
+
+  if (isLoading) {
+    return (
+      <Layout>
+        <Loader />
+      </Layout>
+    );
+  }
 
   return (
     <Layout>

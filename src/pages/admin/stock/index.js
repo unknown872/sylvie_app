@@ -17,10 +17,11 @@ import { TiArrowUnsorted } from "react-icons/ti";
 import { GoDash } from "react-icons/go";
 import { FiAlertCircle } from "react-icons/fi";
 import { motion } from "framer-motion";
+import Loader from "@/components/user/loaders/Loader";
 
 export default function index() {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState({ message: "", type: "" });
   const [totalValueCount, setTotalValueCount] = useState(0);
   const [openModal, setOpenModal] = useState(false);
@@ -66,6 +67,7 @@ export default function index() {
   useEffect(() => {
     const fetchStock = async () => {
       try {
+        setLoading(true);
         const url = new URL(`/api/stock`, window.location.origin);
         if (selectedCollection)
           url.searchParams.append("collectionId", selectedCollection);
@@ -78,7 +80,7 @@ export default function index() {
 
         setProducts(data.products); // Mettre à jour les produits
         setTotalPages(data.pagination.totalPages); // Mettre à jour le nombre total de pages
-        setLoading(false);
+        //setLoading(false);
       } catch (error) {
         console.error("Error fetching stock:", error);
         setLoading(false);
@@ -168,7 +170,9 @@ export default function index() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return(
+      <Loader/>
+    )
   }
 
   return (
@@ -352,9 +356,7 @@ export default function index() {
         {/* Tableau responsive */}
         <div className="overflow-x-auto rounded-lg border border-gray-200">
           {loading ? (
-            <div className="flex justify-center items-center p-6">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500"></div>
-            </div>
+            <Loader/>
           ) : (
             <table className="min-w-full text-sm text-left text-gray-700">
               <thead className="bg-gray-100 text-xs uppercase tracking-wider">

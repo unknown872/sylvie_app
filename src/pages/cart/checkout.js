@@ -7,6 +7,7 @@ import { Checkbox } from "@mui/material";
 import { PiShoppingCartSimpleLight } from "react-icons/pi";
 import { CheckCircle, Gift, ShoppingBag, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import Loader from "@/components/user/loaders/Loader";
 
 export default function Checkout() {
   // Récupérer les prix et les informations de livraison
@@ -368,14 +369,7 @@ export default function Checkout() {
           </div>
         )}
         {isLoading && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
-            <div className="flex flex-col items-center space-y-4">
-              <div className="h-24 w-24 animate-spin rounded-full border-4 border-t-transparent border-orange-500"></div>
-              <p className="text-white text-lg">
-                Traitement de votre commande...
-              </p>
-            </div>
-          </div>
+          <Loader/>
         )}
 
         {/* Confirmation de commande */}

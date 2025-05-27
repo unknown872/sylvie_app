@@ -14,12 +14,32 @@ import { Alert } from "@mui/material";
 import Footer from "@/components/user/Footer";
 import { TbArrowBack } from "react-icons/tb";
 import { LiaShoppingBagSolid } from "react-icons/lia";
+import Loader from "@/components/user/Loaders/Loader";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { BookOpen, FileText, Info, MapPin, Truck } from "lucide-react";
 
 const tarifsLivraison = [
-  { zone: "Zone 1", tarif: "1000 CFA" },
-  { zone: "Zone 2", tarif: "1500 CFA" },
-  { zone: "Zone 3", tarif: "2000 CFA" },
-  { zone: "Zone 4", tarif: "2500 CFA" },
+  {
+    zone: "Zone A",
+    quartier: "Cité Keur Gorgui, Mermoz, Sacré Coeur",
+    tarif: "2000 CFA",
+  },
+  { zone: "Zone B", quartier: "Point E, Medina, Colobane", tarif: "1500 CFA" },
+  {
+    zone: "Zone C",
+    quartier: "Ouest Foire, Nord Foire, Yoff",
+    tarif: "2500 CFA",
+  },
 ];
 
 export default function ProductDetails() {
@@ -93,6 +113,19 @@ export default function ProductDetails() {
       !cartButtonRef.current.contains(event.target)
     ) {
       setOpenCart(false); // Ferme le menu si on clique en dehors
+    }
+  };
+
+  const getZoneBadgeVariant = (zone) => {
+    switch (zone) {
+      case "Zone A":
+        return "default";
+      case "Zone B":
+        return "secondary";
+      case "Zone C":
+        return "outline";
+      default:
+        return "default";
     }
   };
 
@@ -229,11 +262,7 @@ export default function ProductDetails() {
 
   if (!product) {
     if (isLoading) {
-      return (
-        <div className="flex justify-center items-center h-screen">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-amber-500"></div>
-        </div>
-      );
+      return <Loader />;
     } else {
       return (
         <div className="flex justify-center items-center h-screen">
@@ -439,37 +468,146 @@ export default function ProductDetails() {
           <div className="border-t border-gray-400 w-full my-4"></div>
 
           {/* Contenu de l'onglet actif */}
-          <div className="min-h-[120px] px-2 sm:px-4">
+          <div className="px-2 sm:px-4">
             {activeTab === "description" && (
-              <div className="description-tab mt-6 text-sm/6 text-gray-500">
-                <p>{product.description}</p>
+              <div className="w-full mx-auto mt-2">
+                <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-gray-50/50 overflow-hidden">
+                  <CardContent className="p-0">
+                    {/* Header Section */}
+                    <div className="bg-gradient-to-r from-slate-50 to-gray-100 px-6 py-4 border-b border-gray-200/50">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                          <FileText className="h-5 w-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            Description du produit
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            Découvrez tous les détails
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Content Section */}
+                    <div className="p-6">
+                      <div className="prose prose-gray max-w-none">
+                        <div className="relative">
+                          {/* Decorative element */}
+                          <div className="absolute -left-2 top-0 w-1 h-full bg-gradient-to-b from-blue-500 to-purple-500 rounded-full opacity-30"></div>
+
+                          <div className="pl-6">
+                            <p className="text-gray-700 leading-relaxed text-base font-normal whitespace-pre-line">
+                              {product?.description}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Footer info */}
+                      <div className="mt-6 pt-4 border-t border-gray-100">
+                        <div className="flex items-center gap-2 text-sm text-gray-500">
+                          <Info className="h-4 w-4" />
+                          <span>
+                            Les informations peuvent varier selon les stocks
+                            disponibles
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             )}
             {activeTab === "livraison" && (
-              <div className="livraison-tab mt-6">
-                <div>
-                  <h3 className="text-lg sm:text-xl font-medium mb-4">
-                    Grille tarifaire de livraison
-                  </h3>
-                  <div className="overflow-x-auto">
-                    <table className="table-auto w-full text-left border-collapse text-sm sm:text-base">
-                      <thead>
-                        <tr className="bg-gray-100">
-                          <th className="px-4 py-2 border">Zone</th>
-                          <th className="px-4 py-2 border">Tarif</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {tarifsLivraison.map((tarif, index) => (
-                          <tr key={index} className="border-b">
-                            <td className="px-4 py-2">{tarif.zone}</td>
-                            <td className="px-4 py-2">{tarif.tarif}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+              <div className="w-full mx-auto px-4">
+                <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-gray-50">
+                  <CardHeader className="text-center pb-6">
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                      <Truck className="h-6 w-6 text-blue-600" />
+                      <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        Grille tarifaire de livraison
+                      </CardTitle>
+                    </div>
+                    <p className="text-gray-600 text-sm">
+                      Découvrez nos tarifs de livraison selon votre zone
+                    </p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow className="bg-gradient-to-r from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100">
+                            <TableHead className="font-semibold text-gray-700 py-4">
+                              <div className="flex items-center gap-2">
+                                <MapPin className="h-4 w-4" />
+                                Zone de livraison
+                              </div>
+                            </TableHead>
+                            <TableHead className="font-semibold text-gray-700 py-4">
+                              Zone
+                            </TableHead>
+                            <TableHead className="font-semibold text-gray-700 py-4 text-right">
+                              Tarif
+                            </TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {tarifsLivraison.map((tarif, index) => (
+                            <TableRow
+                              key={index}
+                              className="hover:bg-gray-50/50 transition-colors duration-200 border-b border-gray-100"
+                            >
+                              <TableCell className="font-medium py-4">
+                                <div className="flex items-center gap-2">
+                                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                  {tarif.quartier}
+                                </div>
+                              </TableCell>
+                              <TableCell className="py-4">
+                                <Badge
+                                  variant={getZoneBadgeVariant(tarif.zone)}
+                                  className="font-medium"
+                                >
+                                  {tarif.zone}
+                                </Badge>
+                              </TableCell>
+                              <TableCell className="py-4 text-right">
+                                <span className="font-semibold text-green-600 bg-green-50 px-3 py-1 rounded-full text-sm">
+                                  {tarif.tarif}
+                                </span>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+
+                    <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                      <div className="flex items-start gap-3">
+                        <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-blue-900 mb-1">
+                            Informations importantes
+                          </h4>
+                          <ul className="text-sm text-blue-700 space-y-1">
+                            <li>
+                              • Livraison gratuite pour les commandes
+                              supérieures à 25 000 FCFA
+                            </li>
+                            <li>
+                              • Délai de livraison : 30-60 minutes selon la zone
+                            </li>
+                            <li>• Paiement à la livraison</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             )}
           </div>
@@ -481,108 +619,113 @@ export default function ProductDetails() {
             VOUS AIMEREZ AUSSI
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 p-2 sm:p-4">
-            {products.slice(0, 4).map((product) => (
-              <div
-                key={product.id}
-                className="md:mx-2 bg-bgColor rounded shadow-lg relative hover:shadow-xl transition duration-200 group"
-              >
-                <div className="flex flex-col justify-center items-center">
-                  <div
-                    className="relative w-full h-80 cursor-pointer"
-                    onClick={() => {
-                      router.push({
-                        pathname: `/product/${product.id}`,
-                      });
-                    }}
-                  >
-                    <Image
-                      src={product.image}
-                      alt="product"
-                      layout="fill"
-                      className="transition-opacity object-cover duration-500 ease-in-out group-hover:opacity-0"
-                    />
-                    <Image
-                      src={product?.other_image || product?.image}
-                      alt="product-hover"
-                      layout="fill"
-                      className="absolute inset-0 object-cover transition-opacity duration-500 ease-in-out opacity-0 group-hover:opacity-100"
-                    />
-                  </div>
-                  {/* Badge de nouveauté */}
-                  {isNewProduct(product.createdAt) && (
-                    <div className="bg-news text-white rounded absolute top-0 left-0 font-poppins text-sm px-1 md:px-4">
-                      Nouveauté
+            {products
+              .slice(0, 4)
+              .filter((p) => p.id !== product.id)
+              .map((product) => (
+                <div
+                  key={product.id}
+                  className="md:mx-2 bg-bgColor rounded shadow-lg relative hover:shadow-xl transition duration-200 group"
+                >
+                  <div className="flex flex-col justify-center items-center">
+                    <div
+                      className="relative w-full h-80 cursor-pointer"
+                      onClick={() => {
+                        router.push({
+                          pathname: `/product/${product.id}`,
+                        });
+                      }}
+                    >
+                      <Image
+                        src={product.image}
+                        alt="product"
+                        layout="fill"
+                        className="transition-opacity object-cover duration-500 ease-in-out group-hover:opacity-0"
+                      />
+                      <Image
+                        src={product?.other_image || product?.image}
+                        alt="product-hover"
+                        layout="fill"
+                        className="absolute inset-0 object-cover transition-opacity duration-500 ease-in-out opacity-0 group-hover:opacity-100"
+                      />
                     </div>
-                  )}
-                  <div className="absolute top-1 right-1 md:hidden">
-                    <span className="bg-slate-300 text-white rounded-full font-poppins text-sm p-1">
-                      {product?.volume} ML
-                    </span>
-                  </div>
-                  <div className="flex flex-col py-2 bg-white w-full">
-                    <button
-                      onClick={() => addToCart(product)}
-                      disabled={product.stock < 1}
-                      className={`hidden md:flex justify-center items-center space-x-1 absolute bottom-16 left-1/2 transform -translate-x-1/2 translate-y-full group-hover:translate-y-0 w-full px-4 py-2 bg-black text-white opacity-0 group-hover:opacity-100 transition duration-500 ease-out ${
-                        product.stock < 1
-                          ? "bg-gray-400 cursor-not-allowed"
-                          : "hover:bg-amber-400"
-                      }`}
-                    >
-                      {product.stock < 1 ? (
-                        <span>Rupture de Stock</span>
-                      ) : (
-                        <div className="hidden md:flex space-x-1 items-center">
-                          <LiaShoppingBagSolid />
-                          <span>Ajouter au panier</span>
-                        </div>
-                      )}
-                    </button>
-                    {/* Bouton d'ajout au panier pour mobile */}
-                    <button
-                      onClick={() => addToCart(product)}
-                      disabled={product.stock < 1}
-                      className={`md:hidden flex justify-center items-center space-x-1 absolute bottom-16 w-full px-4 py-2 bg-black text-white ${
-                        product.stock < 1
-                          ? "bg-gray-400 cursor-not-allowed"
-                          : "hover:bg-amber-400"
-                      }`}
-                    >
-                      {product.stock < 1 ? (
-                        <span>Rupture de Stock</span>
-                      ) : (
-                        <div className="flex space-x-1 items-center">
-                          <LiaShoppingBagSolid />
-                          <span>Ajouter au panier</span>
-                        </div>
-                      )}
-                    </button>
-                    <p className="text-gray-700 font-thin text-center mb-2">
-                      {product?.volume} ML
-                    </p>
-                    <div className="pl-4 h-full">
-                      <h3
-                        className="font-poppins text-sm text-gray-600 cursor-pointer hover:text-amber-400"
-                        onClick={() => {
-                          router.push(`/product/${product.id}`);
-                        }}
+                    {/* Badge de nouveauté */}
+                    {isNewProduct(product.createdAt) && (
+                      <div className="bg-news text-white rounded absolute top-0 left-0 font-poppins text-sm px-1 md:px-4">
+                        Nouveauté
+                      </div>
+                    )}
+                    <div className="absolute top-1 right-1 md:hidden">
+                      <span className="bg-slate-300 text-white rounded-full font-poppins text-sm p-1">
+                        {product?.volume} ML
+                      </span>
+                    </div>
+                    <div className="flex flex-col py-2 bg-white w-full">
+                      <button
+                        onClick={() => addToCart(product)}
+                        disabled={product.stock < 1}
+                        className={`hidden md:flex justify-center items-center space-x-1 absolute bottom-16 left-1/2 transform -translate-x-1/2 translate-y-full group-hover:translate-y-0 w-full px-4 py-2 bg-black text-white opacity-0 group-hover:opacity-100 transition duration-500 ease-out ${
+                          product.stock < 1
+                            ? "bg-gray-400 cursor-not-allowed"
+                            : "hover:bg-amber-400"
+                        }`}
                       >
-                        {screenWidth < 768 && `${product.name.slice(0, 19)}...`}
-                        {screenWidth > 768 && `${product.name.slice(0, 30)}...`}
-                      </h3>
-                      <p className="text-gray-900 text-lg font-semibold font-poppins">
-                        {new Intl.NumberFormat("fr-FR", {
-                          maximumFractionDigits: 0,
-                          minimumFractionDigits: 0,
-                          style: "currency",
-                          currency: "CFA",
-                        }).format(product.price)}
+                        {product.stock < 1 ? (
+                          <span>Rupture de Stock</span>
+                        ) : (
+                          <div className="hidden md:flex space-x-1 items-center">
+                            <LiaShoppingBagSolid />
+                            <span>Ajouter au panier</span>
+                          </div>
+                        )}
+                      </button>
+                      {/* Bouton d'ajout au panier pour mobile */}
+                      <button
+                        onClick={() => addToCart(product)}
+                        disabled={product.stock < 1}
+                        className={`md:hidden flex justify-center items-center space-x-1 absolute bottom-16 w-full px-4 py-2 bg-black text-white ${
+                          product.stock < 1
+                            ? "bg-gray-400 cursor-not-allowed"
+                            : "hover:bg-amber-400"
+                        }`}
+                      >
+                        {product.stock < 1 ? (
+                          <span>Rupture de Stock</span>
+                        ) : (
+                          <div className="flex space-x-1 items-center">
+                            <LiaShoppingBagSolid />
+                            <span>Ajouter au panier</span>
+                          </div>
+                        )}
+                      </button>
+                      <p className="text-gray-700 font-thin text-center mb-2">
+                        {product?.volume} ML
                       </p>
+                      <div className="pl-4 h-full">
+                        <h3
+                          className="font-poppins text-sm text-gray-600 cursor-pointer hover:text-amber-400"
+                          onClick={() => {
+                            router.push(`/product/${product.id}`);
+                          }}
+                        >
+                          {screenWidth < 768 &&
+                            `${product.name.slice(0, 19)}...`}
+                          {screenWidth > 768 &&
+                            `${product.name.slice(0, 30)}...`}
+                        </h3>
+                        <p className="text-gray-900 text-lg font-semibold font-poppins">
+                          {new Intl.NumberFormat("fr-FR", {
+                            maximumFractionDigits: 0,
+                            minimumFractionDigits: 0,
+                            style: "currency",
+                            currency: "CFA",
+                          }).format(product.price)}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </main>

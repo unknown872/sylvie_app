@@ -10,6 +10,7 @@ import {
 } from "react-icons/hi2";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import Loader from "@/components/user/loaders/Loader";
 //import { useRouter } from "next/router";
 
 export default function Dashboard() {
@@ -176,12 +177,10 @@ export default function Dashboard() {
     }).format(price);
   };
 
-  if (status === "loading") {
+  if (status === "loading" || isLoading) {
     return (
       <Layout>
-        <div className="flex justify-center items-center h-screen">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-amber-500"></div>
-        </div>
+        <Loader/>
       </Layout>
     );
   }
@@ -190,7 +189,7 @@ export default function Dashboard() {
     <Layout>
       <div className="flex flex-col gap-6 p-1 md:p-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+          <h1 className="text-2xl md:text-3xl font-bold text-blue-950">
             Tableau de Bord
           </h1>
         </div>

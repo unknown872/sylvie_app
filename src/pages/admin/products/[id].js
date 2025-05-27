@@ -12,6 +12,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import { Alert, CircularProgress } from "@mui/material";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import { FaEdit } from "react-icons/fa";
+import Loader from "@/components/user/loaders/Loader";
 
 export default function Details() {
   const router = useRouter();
@@ -138,9 +139,7 @@ export default function Details() {
   if (loading) {
     return (
       <Layout>
-        <div className="flex justify-center items-center h-screen">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-amber-500"></div>
-        </div>
+        <Loader/>
       </Layout>
     );
   }

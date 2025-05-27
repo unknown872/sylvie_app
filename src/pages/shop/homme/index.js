@@ -397,8 +397,8 @@ function index() {
                 <div className="col-span-4">
                   <Skeleton />
                 </div>
-              ) : products.length === 0 ? (
-                <div className="col-span-4">
+              ) : !products ? (
+                <div className="col-span-4 h-64 flex items-center justify-center">
                   <p className="text-center text-gray-500">
                     Aucun produit disponible
                   </p>

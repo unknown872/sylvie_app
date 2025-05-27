@@ -21,6 +21,7 @@ function index() {
   const [brand, setBrand] = useState("");
   const [stock, setStock] = useState(1);
   const [volume, setVolume] = useState(0);
+  const [category, setCategory] = useState("");
   const [image, setImage] = useState(null);
   const [other_image, setOther_image] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,6 +38,7 @@ function index() {
     brand: "",
     stock: 1,
     volume: 0,
+    category: "",
     image: null,
     other_image: null,
     collectionId: "",
@@ -68,6 +70,7 @@ function index() {
         setBrand(data.brand);
         setStock(data.stock);
         setVolume(data.volume);
+        setCategory(data.category);
         setImage(data.image);
         setOther_image(data.other_image);
         setCollectionId(data.collectionId);
@@ -97,6 +100,10 @@ function index() {
     }
   };
 
+  const handleChangeCategory = (e) => {
+    setCategory(e.target.value);
+  };
+
   const handleOtherImageChange = (e) => {
     setOther_image(e.target.files[0]);
     // Utilisez FileReader pour générer un aperçu de l'image
@@ -117,7 +124,7 @@ function index() {
       return;
     }
 
-    if (!name || !description || !price || !brand || !stock || !volume) {
+    if (!name || !description || !price || !brand || !category) {
       setNotification({
         message: "Tous les champs doivent être remplis.",
         type: "error",
@@ -134,6 +141,7 @@ function index() {
     formData.append("brand", brand);
     formData.append("stock", stock);
     formData.append("volume", volume);
+    formData.append("category", category);
     formData.append("collectionId", collectionId);
     formData.append("image", image);
     if (other_image) {
@@ -164,6 +172,7 @@ function index() {
         setBrand("");
         setStock(0);
         setVolume(0);
+        setCategory("");
         setImage(null);
         setOther_image(null);
         setCollectionId("");
@@ -368,7 +377,7 @@ function index() {
                 </div>
                 <div className="col-span-full md:col-span-3">
                   <label
-                    htmlFor="category"
+                    htmlFor="collection"
                     className="text-sm font-medium text-gray-700 block mb-2"
                   >
                     Collection
@@ -393,7 +402,7 @@ function index() {
                 </div>
 
                 {/* Marque, Stock et Contenance */}
-                <div className="col-span-full md:col-span-6 sm:col-span-3">
+                <div className="col-span-full md:col-span-3">
                   <label
                     htmlFor="brand"
                     className="text-sm font-medium text-gray-700 block mb-2"
@@ -409,6 +418,28 @@ function index() {
                     className="shadow-sm border border-gray-300 text-gray-900 sm:text-sm rounded-sm focus:outline-cyan-600 focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                     required
                   />
+                </div>
+                <div className="col-span-full md:col-span-3">
+                  <label
+                    htmlFor="category"
+                    className="text-sm font-medium text-gray-700 block mb-2"
+                  >
+                    Catégorie
+                  </label>
+                  <select
+                    name="category"
+                    value={category}
+                    id="category"
+                    onChange={(e) => setCategory(e.target.value)}
+                    required
+                    className="shadow-sm border border-gray-300 sm:text-sm rounded-sm focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                  >
+                    <option value="" disabled>
+                      Sélectionnez une catégorie
+                    </option>
+                    <option value="homme">Homme</option>
+                    <option value="femme">Femme</option>
+                  </select>
                 </div>
                 <div className="col-span-full md:col-span-3 sm:col-span-3">
                   <label

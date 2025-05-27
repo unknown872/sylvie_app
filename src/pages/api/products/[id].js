@@ -71,6 +71,9 @@ export default async function handler(req, res) {
       const otherImageFile = files.other_image ? files.other_image[0] : null;
 
       const name = Array.isArray(fields.name) ? fields.name[0] : fields.name;
+      const category = Array.isArray(fields.category)
+        ? fields.category[0]
+        : fields.category;
       const description = Array.isArray(fields.description)
         ? fields.description[0]
         : fields.description;
@@ -126,6 +129,7 @@ export default async function handler(req, res) {
             brand,
             stock,
             volume,
+            category,
             image: imageUrl, // Chemin de l'image stockée
             collectionId: collectionId,
             other_image: otherImageUrl,
