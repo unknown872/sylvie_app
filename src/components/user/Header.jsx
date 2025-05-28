@@ -334,12 +334,12 @@ export default function Header({ products, addToCart, totalPrice, clearCart, rem
                                                         collections.map((collection) => (
                                                             <li key={collection.name} className="transition-all">
                                                                 <Link href={`/shop/${collection.name}`} passHref>
-                                                                    <a
+                                                                    <span
                                                                         className={`text-sm text-gray-600 hover:text-gray-900 hover:font-medium block py-1 transition-all duration-200 ${isActive(`/shop/${collection.name}`) ? "text-gray-900 font-medium" : ""
                                                                             }`}
                                                                     >
                                                                         {collection.name}
-                                                                    </a>
+                                                                    </span>
                                                                 </Link>
                                                             </li>
                                                         ))

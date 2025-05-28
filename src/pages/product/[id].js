@@ -440,12 +440,12 @@ export default function ProductDetails() {
         </div>
 
         {/* Onglets description et livraison */}
-        <div className="relative px-2 sm:px-4">
+        <div className="relative px-2">
           <div className="flex justify-center">
             <div className="flex space-x-2 sm:space-x-6 w-full max-w-md">
               <button
                 onClick={() => handleTabClick("description")}
-                className={`font-poppins border py-2 px-3 sm:py-3 sm:px-4 flex-1 text-sm sm:text-base transition-colors duration-300 ${
+                className={`font-poppins border py-2 flex-1 text-sm sm:text-base transition-colors duration-300 ${
                   activeTab === "description"
                     ? "bg-gray-900 text-white"
                     : "bg-white text-gray-900 border-gray-400 hover:bg-gray-900 hover:text-white"
@@ -466,9 +466,8 @@ export default function ProductDetails() {
             </div>
           </div>
           <div className="border-t border-gray-400 w-full my-4"></div>
-
           {/* Contenu de l'onglet actif */}
-          <div className="px-2 sm:px-4">
+          <div className="md:px-2 px-0">
             {activeTab === "description" && (
               <div className="w-full mx-auto mt-2">
                 <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-gray-50/50 overflow-hidden">
@@ -498,7 +497,7 @@ export default function ProductDetails() {
                           <div className="absolute -left-2 top-0 w-1 h-full bg-gradient-to-b from-blue-500 to-purple-500 rounded-full opacity-30"></div>
 
                           <div className="pl-6">
-                            <p className="text-gray-700 leading-relaxed text-base font-normal whitespace-pre-line">
+                            <p className="text-gray-700 leading-relaxed text-sm md:text-base font-normal whitespace-pre-line">
                               {product?.description}
                             </p>
                           </div>
@@ -507,7 +506,7 @@ export default function ProductDetails() {
 
                       {/* Footer info */}
                       <div className="mt-6 pt-4 border-t border-gray-100">
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <div className="flex items-center gap-2 text-xs md:text-base text-gray-500">
                           <Info className="h-4 w-4" />
                           <span>
                             Les informations peuvent varier selon les stocks
@@ -521,7 +520,7 @@ export default function ProductDetails() {
               </div>
             )}
             {activeTab === "livraison" && (
-              <div className="w-full mx-auto px-4">
+              <div className="w-full mx-auto md:px-4">
                 <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-gray-50">
                   <CardHeader className="text-center pb-6">
                     <div className="flex items-center justify-center gap-2 mb-2">
@@ -535,68 +534,99 @@ export default function ProductDetails() {
                     </p>
                   </CardHeader>
                   <CardContent>
-                    <div className="overflow-x-auto">
-                      <Table>
-                        <TableHeader>
-                          <TableRow className="bg-gradient-to-r from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100">
-                            <TableHead className="font-semibold text-gray-700 py-4">
-                              <div className="flex items-center gap-2">
-                                <MapPin className="h-4 w-4" />
-                                Zone de livraison
-                              </div>
-                            </TableHead>
-                            <TableHead className="font-semibold text-gray-700 py-4">
-                              Zone
-                            </TableHead>
-                            <TableHead className="font-semibold text-gray-700 py-4 text-right">
-                              Tarif
-                            </TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {tarifsLivraison.map((tarif, index) => (
-                            <TableRow
-                              key={index}
-                              className="hover:bg-gray-50/50 transition-colors duration-200 border-b border-gray-100"
-                            >
-                              <TableCell className="font-medium py-4">
+                    {/* Desktop : tableau */}
+                    <div className="hidden md:block">
+                      <div className="overflow-x-auto rounded-lg border border-gray-200">
+                        <table className="min-w-full bg-white text-sm">
+                          <thead className="bg-gradient-to-r from-blue-50 to-purple-50">
+                            <tr>
+                              <th className="text-left font-semibold text-gray-700 px-4 py-3">
                                 <div className="flex items-center gap-2">
-                                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                                  {tarif.quartier}
+                                  <MapPin className="h-4 w-4" />
+                                  Zone de livraison
                                 </div>
-                              </TableCell>
-                              <TableCell className="py-4">
-                                <Badge
-                                  variant={getZoneBadgeVariant(tarif.zone)}
-                                  className="font-medium"
-                                >
-                                  {tarif.zone}
-                                </Badge>
-                              </TableCell>
-                              <TableCell className="py-4 text-right">
-                                <span className="font-semibold text-green-600 bg-green-50 px-3 py-1 rounded-full text-sm">
-                                  {tarif.tarif}
-                                </span>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                              </th>
+                              <th className="text-left font-semibold text-gray-700 px-4 py-3">
+                                Zone
+                              </th>
+                              <th className="text-right font-semibold text-gray-700 px-4 py-3">
+                                Tarif
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {tarifsLivraison.map((tarif, index) => (
+                              <tr
+                                key={index}
+                                className="border-t border-gray-100 hover:bg-gray-50 transition"
+                              >
+                                <td className="px-4 py-4 font-medium text-gray-800">
+                                  <div className="flex items-center gap-2">
+                                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                                    {tarif.quartier}
+                                  </div>
+                                </td>
+                                <td className="px-4 py-4">
+                                  <Badge
+                                    variant={getZoneBadgeVariant(tarif.zone)}
+                                    className="font-medium"
+                                  >
+                                    {tarif.zone}
+                                  </Badge>
+                                </td>
+                                <td className="px-4 py-4 text-right">
+                                  <span className="text-green-600 bg-green-100 px-3 py-1 rounded-full text-xs font-semibold">
+                                    {tarif.tarif}
+                                  </span>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
 
-                    <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                      <div className="flex items-start gap-3">
-                        <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                    {/* Mobile : cards */}
+                    <div className="block md:hidden space-y-4">
+                      {tarifsLivraison.map((tarif, index) => (
+                        <div
+                          key={index}
+                          className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm"
+                        >
+                          <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
+                            <MapPin className="h-4 w-4 text-blue-500" />
+                            {tarif.quartier}
+                          </div>
+                          <div className="flex justify-between items-center text-sm mt-2">
+                            <span>
+                              <Badge variant={getZoneBadgeVariant(tarif.zone)}>
+                                {tarif.zone}
+                              </Badge>
+                            </span>
+                            <span className="text-green-600 bg-green-100 px-3 py-1 rounded-full text-xs font-semibold">
+                              {tarif.tarif}
+                            </span>
+                          </div>
                         </div>
-                        <div>
-                          <h4 className="font-medium text-blue-900 mb-1">
+                      ))}
+                    </div>
+
+                    {/* Informations */}
+                    <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                      <div className="flex items-start gap-3 flex-col">
+                        <div className="flex space-x-2">
+                          <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                          </div>
+                          <h4 className="font-medium text-blue-900 mb-1 text-base sm:text-lg">
                             Informations importantes
                           </h4>
+                        </div>
+                        <div>
                           <ul className="text-sm text-blue-700 space-y-1">
                             <li>
                               • Livraison gratuite pour les commandes
-                              supérieures à 25 000 FCFA
+                              supérieures à 85 000 FCFA
                             </li>
                             <li>
                               • Délai de livraison : 30-60 minutes selon la zone

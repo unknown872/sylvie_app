@@ -9,12 +9,18 @@ import HeroImage from "../../../public/HeroImage.png";
 import Header from "@/components/user/Header";
 import Banner from "@/components/user/Banner";
 import Footer from "@/components/user/Footer";
+import { CheckCircle, XCircle } from "lucide-react"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
 function index() {
   const [cart, setCart] = useState([]);
   const [openCart, setOpenCart] = useState(false);
   const cartMenuRef = useRef(null);
   const cartButtonRef = useRef(null);
   const [wishlist, setWishlist] = useState([]);
+  const [status, setStatus] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false)
 
   const handleOpenCart = () => {
     setOpenCart(!openCart);
@@ -96,6 +102,39 @@ function index() {
     }
   }, []);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = {
+      name: form.name.value,
+      tel: form.tel.value,
+      email: form.email.value,
+      message: form.message.value,
+    };
+
+    try {
+      setIsLoading(true);
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setStatus("success");
+        form.reset(); // vide le formulaire
+      } else {
+        setStatus("error");
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'envoi :", error);
+      setStatus("error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // Ajouter à la liste des envies
   const addToWishlist = (product) => {
     const storedWishlist = [...wishlist];
@@ -117,6 +156,17 @@ function index() {
       });
     }
   };
+
+  useEffect(() => {
+    if (status) {
+      setShowModal(true)
+    }
+  }, [status])
+
+  const handleCloseModal = () => {
+    setShowModal(false)
+    setStatus(null)
+  }
 
   // Vérifier si un produit est dans la wishlist
   const isInWishlist = (productId) => {
@@ -164,13 +214,26 @@ function index() {
         <div className="flex flex-col md:flex-row py-6 lg:py-10 mx-4 md:mx-8 lg:mx-10">
           {/* Formulaire de contact */}
           <div className="w-full md:w-1/2 md:px-6 lg:px-10">
+            {status === "success" && (
+              <p className="text-green-600 bg-green-100 mt-4">
+                Message envoyé avec succès ✅
+              </p>
+            )}
+            {status === "error" && (
+              <p className="text-red-600 bg-red-100 mt-4">
+                Une erreur est survenue. Veuillez réessayer ❌
+              </p>
+            )}
             <div
               id="contact-us"
               className="overflow-hidden bg-white px-2 dark:bg-slate-900"
             >
               <div className="relative mx-auto max-w-xl">
                 <div className="mt-2">
-                  <form className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
+                  <form
+                    onSubmit={handleSubmit}
+                    className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8"
+                  >
                     <div className="sm:col-span-2">
                       <label
                         htmlFor="name"
@@ -245,10 +308,11 @@ function index() {
                     <div className="flex justify-end sm:col-span-2">
                       <button
                         type="submit"
+                        disabled={isLoading}
                         className="inline-flex space-x-1 items-center rounded-md px-4 py-2 font-medium focus:outline-none focus-visible:ring focus-visible:ring-sky-500 shadow-sm sm:text-sm transition-colors duration-75 text-sky-500 border border-sky-500 hover:bg-sky-50 active:bg-sky-100 disabled:bg-sky-100 dark:hover:bg-gray-900 dark:active:bg-gray-800 dark:disabled:bg-gray-800 disabled:cursor-not-allowed"
                       >
                         <RiSendPlaneFill />
-                        <span>Envoyer</span>
+                        <span>{isLoading ? "Envoi..." : "Envoyer"}</span>
                       </button>
                     </div>
                   </form>
@@ -290,6 +354,34 @@ function index() {
             </div>
           </div>
         </div>
+
+        {/* Modal de statut */}
+        <Dialog open={showModal} onOpenChange={setShowModal}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <div className="flex items-center justify-center mb-4">
+                {status === "success" ? (
+                  <CheckCircle className="w-16 h-16 text-green-500" />
+                ) : (
+                  <XCircle className="w-16 h-16 text-red-500" />
+                )}
+              </div>
+              <DialogTitle className="text-center">
+                {status === "success" ? "Message envoyé !" : "Erreur d'envoi"}
+              </DialogTitle>
+              <DialogDescription className="text-center">
+                {status === "success"
+                  ? "Votre message a été envoyé avec succès. Nous vous reviendrons au plus vite !"
+                  : "Une erreur est survenue lors de l'envoi de votre message. Veuillez réessayer."}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex justify-center mt-6">
+              <Button onClick={handleCloseModal} className="w-full">
+                Fermer
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </main>
       <Footer />
     </>

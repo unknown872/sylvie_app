@@ -46,7 +46,7 @@ export default function Man() {
 
     // Contenu normal
     return (
-        <section className="relative h-[500px] flex flex-col items-center justify-center text-center text-white">
+        <section className="relative h-[500px] flex flex-col bg-gray-800 items-center justify-center text-center text-white">
             <div className="absolute inset-0 overflow-hidden">
                 <video
                     className="absolute top-1/2 left-1/2 w-auto h-[500px] min-w-full min-h-full max-w-none transform -translate-x-1/2 -translate-y-1/2 object-cover"

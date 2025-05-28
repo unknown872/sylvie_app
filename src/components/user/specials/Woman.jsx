@@ -18,7 +18,7 @@ export default function Woman() {
     // Skeleton intégré directement
     if (showSkeleton) {
         return (
-            <section className="relative h-[500px] flex flex-col items-center justify-center text-center text-white">
+            <section className="relative h-[500px] flex flex-col bg-gray-800 items-center justify-center text-center text-white">
                 {/* Skeleton pour la vidéo de fond */}
                 <div className="absolute inset-0 overflow-hidden bg-gradient-to-br from-gray-300 to-gray-400">
                     {/* Icône play au centre pour indiquer une vidéo */}
