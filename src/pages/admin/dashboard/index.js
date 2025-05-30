@@ -239,7 +239,7 @@ export default function Dashboard() {
                   <h3
                     className={`${item.textColor} opacity-90 font-medium text-sm mt-1`}
                   >
-                    {item.title}
+                    {item.title} 
                   </h3>
                 </div>
               </div>

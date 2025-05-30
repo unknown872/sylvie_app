@@ -498,7 +498,7 @@ export default async function handler(req, res) {
                 </div>
                
                 <div style="text-align: center;">
-                  <a href="VOTRE_URL_TABLEAU_DE_BORD" class="action-button">Accéder au tableau de bord</a>
+                  <a href="https://sylvie-app.vercel.app/admin/dashboard" class="action-button">Accéder au tableau de bord</a>
                 </div>
               </div>
              

@@ -60,7 +60,7 @@ export default function index() {
 
     if (response.ok) {
       setNotification({
-        message: "Catégorie ajoutée avec succès!",
+        message: "Collection ajoutée avec succès!",
         type: "success",
       });
       setIsLoading(false);
@@ -126,7 +126,7 @@ export default function index() {
           );
           //Affichage de la notification
           setNotification({
-            message: "Catégorie supprimée avec succès!",
+            message: "Collection supprimée avec succès!",
             type: "success",
           });
           // Réinitialiser la notification après un délai
@@ -187,7 +187,7 @@ export default function index() {
         closeEditModal();
         //Affichage de la notification
         setNotification({
-          message: "Catégorie modifiée avec succès!",
+          message: "Collection modifiée avec succès!",
           type: "success",
         });
         // Réinitialiser la notification après un délai
@@ -215,7 +215,7 @@ export default function index() {
         setTotalPages(data.totalPages);
         setLoading(false);
       } catch (error) {
-        console.error("Erreur lors du chargement des catégories :", error);
+        console.error("Erreur lors du chargement des collections :", error);
         setLoading(false);
       }
     };
@@ -288,12 +288,12 @@ export default function index() {
               </div>
               <div className="flex flex-col ml-4 space-y-2">
                 <h2 className="font-semibold text-gray-500 text-lg">
-                  Total Catégories
+                  Total Collections
                 </h2>
                 <div className="text-2xl text-blue-950 font-bold">
                   {count}{" "}
                   <span>
-                    {collections.length < 1 ? "catégorie" : "catégories"}
+                    {collections.length < 1 ? "collection" : "collections"}
                   </span>
                 </div>
               </div>
@@ -326,7 +326,7 @@ export default function index() {
                       type="text"
                       id="default-search"
                       className="block cursor-pointer w-full md:w-80 h-11 pr-5 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-sm placeholder-gray-400 focus:outline-none"
-                      placeholder="Rechercher une catégorie"
+                      placeholder="Rechercher une collection..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                     />
@@ -340,7 +340,7 @@ export default function index() {
                     >
                       <div className="flex items-center space-x-1">
                         <IoMdAdd className="w-6 h-6" />
-                        <span>Ajouter une catégorie</span>
+                        <span>Ajouter une collection</span>
                       </div>
                     </button>
                     <button
@@ -368,7 +368,7 @@ export default function index() {
                             scope="col"
                             className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"
                           >
-                            Catégorie
+                            Collection
                           </th>
                           <th
                             scope="col"
@@ -386,7 +386,7 @@ export default function index() {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-300">
-                        {collections.length === 0 ? (
+                        {collections.length === 0 || !collections ? (
                           <tr>
                             <td
                               colSpan="5"
@@ -480,7 +480,7 @@ export default function index() {
               >
                 <div className="flex justify-between p-4 border-b">
                   <h2 className="text-lg font-semibold">
-                    Ajouter une catégorie
+                    Ajouter une collection
                   </h2>
                   <IoMdCloseCircle
                     className="w-6 h-6 cursor-pointer"
@@ -493,7 +493,7 @@ export default function index() {
                       className="block text-sm font-medium mb-2"
                       htmlFor="name"
                     >
-                      Nom de la catégorie
+                      Nom de la collection
                     </label>
                     <input
                       type="text"
@@ -501,7 +501,7 @@ export default function index() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       className="w-full px-3 py-2 border rounded focus:ring focus:ring-blue-500"
-                      placeholder="Nom de la catégorie"
+                      placeholder="Nom de la collection"
                       required
                     />
                   </div>

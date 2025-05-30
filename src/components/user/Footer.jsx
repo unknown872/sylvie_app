@@ -61,7 +61,7 @@ export default function Footer() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:mx-10 mx-2 py-10">
                 {/* Section 1 : Les senteurs de sylvie */}
                 <div className="px-4 sm:px-10">
-                    <nav className="flex flex-col space-y-4 text-gray-500 font-poppins">
+                    <nav className="flex flex-col space-y-4 text-gray-500 font-poppins text-sm">
                         <p className="uppercase font-semibold">Les senteurs de sylvie</p>
                         {menus.map((menu, index) => (
                             <div key={index}>
@@ -76,7 +76,7 @@ export default function Footer() {
 
                 {/* Section 2 : Assistance */}
                 <div className="px-4 sm:px-10">
-                    <nav className="flex flex-col space-y-4 text-gray-500 font-poppins">
+                    <nav className="flex flex-col space-y-4 text-gray-500 font-poppins text-sm">
                         <p className="uppercase font-semibold">Assistance</p>
                         {assistances.map((assistance, index) => (
                             <div key={index}>
@@ -91,7 +91,7 @@ export default function Footer() {
 
                 {/* Section 3 : Collections */}
                 <div className="px-4 sm:px-10">
-                    <nav className="flex flex-col space-y-4 text-gray-500 font-poppins">
+                    <nav className="flex flex-col space-y-4 text-gray-500 font-poppins text-sm">
                         <p className="uppercase font-semibold">Collections</p>
                         {collections.map((collection, index) => (
                             <div key={index}>

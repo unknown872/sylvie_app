@@ -456,7 +456,7 @@ function index() {
                           <button
                             onClick={() => addToCart(product)}
                             disabled={product.stock < 1}
-                            className={`md:hidden flex justify-center items-center space-x-1 absolute bottom-16 w-full px-4 py-2 bg-black text-white ${
+                            className={`md:hidden flex justify-center text-sm items-center space-x-1 absolute bottom-16 w-full px-4 py-2 bg-black text-white ${
                               product.stock < 1
                                 ? "bg-gray-400 cursor-not-allowed"
                                 : "hover:bg-amber-400"

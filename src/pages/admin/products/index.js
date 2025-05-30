@@ -305,7 +305,6 @@ export default function index() {
                             >
                               <div className="flex items-center space-x-1">
                                 <span>Nom du produit</span>
-                                <TiArrowUnsorted />
                               </div>
                             </th>
                             <th
@@ -314,7 +313,6 @@ export default function index() {
                             >
                               <div className="flex items-center space-x-1">
                                 <span>Catégorie</span>
-                                <TiArrowUnsorted />
                               </div>
                             </th>
                             <th
@@ -323,7 +321,6 @@ export default function index() {
                             >
                               <div className="flex items-center space-x-1">
                                 <span>Quantité</span>
-                                <TiArrowUnsorted />
                               </div>
                             </th>
                             <th
@@ -332,7 +329,6 @@ export default function index() {
                             >
                               <div className="flex items-center space-x-1">
                                 <span>Prix</span>
-                                <TiArrowUnsorted />
                               </div>
                             </th>
                             <th

@@ -368,66 +368,67 @@ export default function Checkout() {
             </button>
           </div>
         )}
-        {isLoading && (
-          <Loader/>
-        )}
+        {isLoading && <Loader />}
 
         {/* Confirmation de commande */}
         {confirmation && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-60 backdrop-blur-sm px-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-60 backdrop-blur-sm p-4">
             {/* Conteneur principal */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.4, ease: "easeInOut" }}
-              className="bg-white rounded-3xl shadow-2xl w-[90%] sm:max-w-md overflow-hidden"
+              className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-xs sm:max-w-md lg:max-w-lg overflow-hidden mx-auto"
             >
               {/* En-tête coloré */}
-              <div className="bg-gradient-to-r from-amber-400 to-amber-500 p-6 relative overflow-hidden">
+              <div className="bg-gradient-to-r from-amber-400 to-amber-500 p-4 sm:p-6 relative overflow-hidden">
                 {/* Effets visuels d'arrière-plan */}
-                <div className="absolute -right-8 -top-8 w-32 h-32 bg-white bg-opacity-20 rounded-full blur-lg"></div>
-                <div className="absolute right-12 top-12 w-16 h-16 bg-white bg-opacity-20 rounded-full blur-lg"></div>
+                <div className="absolute -right-6 -top-6 sm:-right-8 sm:-top-8 w-24 h-24 sm:w-32 sm:h-32 bg-white bg-opacity-20 rounded-full blur-lg"></div>
+                <div className="absolute right-8 top-8 sm:right-12 sm:top-12 w-12 h-12 sm:w-16 sm:h-16 bg-white bg-opacity-20 rounded-full blur-lg"></div>
 
                 {/* Icône centrale animée */}
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ duration: 0.6, ease: "easeInOut", delay: 0.2 }}
-                  className="flex justify-center mb-4"
+                  className="flex justify-center mb-3 sm:mb-4"
                 >
-                  <div className="bg-white rounded-full p-4 shadow-lg">
-                    <CheckCircle size={40} className="text-amber-500" />
+                  <div className="bg-white rounded-full p-3 sm:p-4 shadow-lg">
+                    <CheckCircle
+                      size={32}
+                      className="text-amber-500 sm:w-10 sm:h-10"
+                    />
                   </div>
                 </motion.div>
 
                 {/* Titre principal */}
-                <h2 className="text-2xl sm:text-3xl font-bold text-white text-center">
+                <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white text-center leading-tight">
                   Commande confirmée !
                 </h2>
               </div>
 
               {/* Corps */}
-              <div className="p-6 space-y-4">
+              <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
                 {/* Message de confirmation */}
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.4 }}
-                  className="text-gray-700 text-center text-base sm:text-lg"
+                  className="text-gray-700 text-center text-sm sm:text-base lg:text-lg leading-relaxed"
                 >
                   Nous avons bien reçu votre commande. Un e-mail de confirmation
                   a été envoyé à votre adresse.
                 </motion.p>
 
                 {/* Actions */}
-                <div className="flex flex-col space-y-3">
+                <div className="flex flex-col space-y-3 sm:space-y-4">
                   {/* Bouton principal */}
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={handleRedirect}
-                    className="w-full bg-amber-500 hover:bg-amber-400 text-white py-3 px-4 rounded-xl font-semibold transition-colors flex items-center justify-center shadow-md"
+                    className="w-full bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center shadow-md hover:shadow-lg text-sm sm:text-base"
                   >
                     Continuer mes achats
                   </motion.button>
@@ -435,7 +436,7 @@ export default function Checkout() {
                   {/* Bouton secondaire */}
                   <button
                     onClick={() => console.log("Voir la commande")}
-                    className="w-full border border-gray-300 text-gray-700 py-3 px-4 rounded-xl font-medium transition-colors hover:bg-gray-50 flex items-center justify-center"
+                    className="w-full border border-gray-300 text-gray-700 py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-medium transition-all duration-200 hover:bg-gray-50 active:bg-gray-100 flex items-center justify-center text-sm sm:text-base"
                   >
                     Voir ma commande
                   </button>

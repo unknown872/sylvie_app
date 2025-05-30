@@ -83,7 +83,9 @@ export default function index() {
         //setLoading(false);
       } catch (error) {
         console.error("Error fetching stock:", error);
-        setLoading(false);
+        //setLoading(false);
+      } finally {
+        setLoading(false); // Assurez-vous de mettre à jour l'état de chargement
       }
     };
 

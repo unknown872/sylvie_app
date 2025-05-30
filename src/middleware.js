@@ -21,5 +21,8 @@ export const config = {
     "/admin/products/:path*",
     "/admin/orders/:path*",
     "/admin/accounts",
+    "/admin/collections/:path*",  
+    "/admin/stock/:path*",
+    "/admin/customers/:path*",
   ],
 };

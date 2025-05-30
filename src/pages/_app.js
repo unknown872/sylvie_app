@@ -12,7 +12,7 @@ export default function App({ Component, pageProps }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false); // Retirer le loader après un certain temps (ex: 1 seconde)
-    }, 1000); // Durée de 1 seconde pour simuler un premier chargement
+    }, 300); // Durée de 1 seconde pour simuler un premier chargement
     return () => clearTimeout(timer);
   }, []);
 

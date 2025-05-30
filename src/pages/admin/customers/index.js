@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Layout from "@/components/admin/layout/layout";
-import { Users, Phone, Mail, MapPin, Search, RefreshCw, UserPlus } from "lucide-react";
+import {
+  Users,
+  Phone,
+  Mail,
+  MapPin,
+  Search,
+  RefreshCw,
+  UserPlus,
+} from "lucide-react";
 
 export default function ClientList() {
   const [clients, setClients] = useState([]);
@@ -33,17 +41,21 @@ export default function ClientList() {
   };
 
   // Filtrer les clients en fonction du terme de recherche
-  const filteredClients = clients.filter(client => 
-    client.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client.phone?.includes(searchTerm)
+  const filteredClients = clients.filter(
+    (client) =>
+      client.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      client.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      client.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      client.phone?.includes(searchTerm)
   );
 
   // Calculer les clients à afficher pour la page actuelle
   const indexOfLastClient = currentPage * clientsPerPage;
   const indexOfFirstClient = indexOfLastClient - clientsPerPage;
-  const currentClients = filteredClients.slice(indexOfFirstClient, indexOfLastClient);
+  const currentClients = filteredClients.slice(
+    indexOfFirstClient,
+    indexOfLastClient
+  );
 
   // Changer de page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -60,17 +72,16 @@ export default function ClientList() {
           {/* En-tête avec statistiques */}
           <div className="flex flex-col md:flex-row justify-between items-center mb-8">
             <div className="flex items-center mb-4 md:mb-0">
-              <div className="bg-amber-500 p-3 rounded-lg shadow-lg mr-4">
+              <div className="bg-amber-500 p-3 rounded-lg shadow-xl hover:shadow-2xl transition-all duration-200 mr-4">
                 <Users className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl sm:text-3xl text-gray-800 font-semibold">
+                <h1 className="text-2xl sm:text-3xl text-gray-800 font-semibold tracking-wide">
                   Liste des Clients
                 </h1>
               </div>
             </div>
-
-            <div className="bg-white px-4 py-3 rounded-lg shadow-md flex items-center">
+            <div className="bg-white px-4 py-3 rounded-lg shadow-md flex items-center hover:bg-gray-50 transition-colors duration-300">
               <Users className="h-5 w-5 text-amber-500 mr-2" />
               <span className="text-gray-700 font-medium">Total:</span>
               <span className="ml-2 text-xl sm:text-2xl font-bold text-amber-500">
@@ -80,21 +91,22 @@ export default function ClientList() {
           </div>
 
           {/* Barre d'outils */}
-          <div className="bg-white rounded-xl shadow-xl overflow-hidden">
+          <div className="bg-white shadow-xl overflow-hidden">
             <div className="bg-gray-50 px-4  py-4 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-4">
               <div className="relative w-full sm:w-96">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-gray-400" />
+                  <Search className="h-5 w-5 text-gray-500" />
                 </div>
                 <input
                   type="text"
-                  className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-sm"
+                  className="pl-10 pr-4 py-2 w-full border-2 border-gray-300 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-sm placeholder-gray-400 transition-all duration-200"
                   placeholder="Rechercher un client..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
             </div>
+
             {/* Contenu */}
             {loading ? (
               <div className="flex justify-center items-center py-20">
@@ -130,11 +142,15 @@ export default function ClientList() {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {currentClients.map((client, index) => (
-                      <tr key={index} className="hover:bg-blue-50 transition-colors">
+                      <tr
+                        key={index}
+                        className="hover:bg-blue-50 transition-all duration-200"
+                      >
                         <td className="px-4 sm:px-6 py-4">
                           <div className="flex items-center">
                             <div className="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-500 font-bold">
-                              {client.firstName?.charAt(0)}{client.lastName?.charAt(0)}
+                              {client.firstName?.charAt(0)}
+                              {client.lastName?.charAt(0)}
                             </div>
                             <div className="ml-4">
                               <div className="text-sm sm:text-base font-medium text-gray-900">
@@ -171,11 +187,12 @@ export default function ClientList() {
                   {currentClients.map((client, index) => (
                     <div
                       key={index}
-                      className="border-b border-gray-200 p-4 hover:bg-blue-50 transition-colors"
+                      className="border-b border-gray-200 p-4 hover:bg-blue-50 transition-colors duration-300"
                     >
                       <div className="flex items-center mb-2">
                         <div className="flex-shrink-0 h-10 w-10 bg-amber-100 rounded-full flex items-center justify-center text-blue-500 font-bold">
-                          {client.firstName?.charAt(0)}{client.lastName?.charAt(0)}
+                          {client.firstName?.charAt(0)}
+                          {client.lastName?.charAt(0)}
                         </div>
                         <div className="ml-4">
                           <div className="text-sm font-medium text-gray-900">
@@ -206,36 +223,33 @@ export default function ClientList() {
             {/* Pagination */}
             {!loading && !error && filteredClients.length > 0 && (
               <div className="bg-white px-4 sm:px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-                <div className="text-sm text-gray-700">
-                  Affichage de{" "}
-                  <span className="font-medium">{indexOfFirstClient + 1}</span> à{" "}
-                  <span className="font-medium">{Math.min(indexOfLastClient, filteredClients.length)}</span>{" "}
-                  sur <span className="font-medium">{filteredClients.length}</span> clients
-                </div>
-                <div className="flex space-x-2">
-                  <button
-                    className={`px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-50 ${
-                      currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
-                    onClick={() => setCurrentPage(currentPage - 1)}
-                    disabled={currentPage === 1}
-                  >
-                    Précédent
-                  </button>
-                  <button className="px-4 py-2 border rounded-md bg-blue-500 text-white hover:bg-blue-700">
-                    {currentPage}
-                  </button>
-                  <button
-                    className={`px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-50 ${
-                      indexOfLastClient >= filteredClients.length ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
-                    onClick={() => setCurrentPage(currentPage + 1)}
-                    disabled={indexOfLastClient >= filteredClients.length}
-                  >
-                    Suivant
-                  </button>
-                </div>
+              <div className="text-sm text-gray-700">
+                Affichage de{" "}
+                <span className="font-medium">{indexOfFirstClient + 1}</span> à{" "}
+                <span className="font-medium">{Math.min(indexOfLastClient, filteredClients.length)}</span>{" "}
+                sur <span className="font-medium">{filteredClients.length}</span> clients
               </div>
+              <div className="flex space-x-2">
+                <button
+                  className={`px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-50 ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  Précédent
+                </button>
+                <button className="px-4 py-2 border rounded-md bg-blue-500 text-white hover:bg-blue-700 transition-all duration-200">
+                  {currentPage}
+                </button>
+                <button
+                  className={`px-4 py-2 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-50 ${indexOfLastClient >= filteredClients.length ? "opacity-50 cursor-not-allowed" : ""}`}
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  disabled={indexOfLastClient >= filteredClients.length}
+                >
+                  Suivant
+                </button>
+              </div>
+           </div>
+           
             )}
           </div>
         </div>
